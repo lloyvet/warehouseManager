@@ -26,6 +26,7 @@ public class UserRealm extends AuthenticatingRealm {
 
 
     @Autowired
+    @Lazy
     private UserService userService;
 
     @Override

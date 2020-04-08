@@ -5,8 +5,12 @@ import com.lloyvet.system.common.DataGridView;
 import com.lloyvet.system.vo.DeptVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
+import java.io.Serializable;
 import java.util.List;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lloyvet.system.mapper.DeptMapper;
@@ -26,7 +30,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
         return new DataGridView(Long.valueOf(depts.size()),depts);
     }
-
+    @CachePut(cacheNames = "com.lloyvet.system.service.impl.DeptServiceImpl",key = "#result.id")
     @Override
     public Dept saveDept(Dept dept) {
         deptMapper.insert(dept);
@@ -38,14 +42,26 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         return deptMapper.queryDeptMaxOrderNum();
     }
 
+    @Cacheable(cacheNames = "com.lloyvet.system.service.impl.DeptServiceImpl",key = "#id")
+    @Override
+    public Dept getById(Serializable id) {
+        return super.getById(id);
+    }
+
     @Override
     public Integer countChildren(Integer id) {
         return deptMapper.selectCountChildren(id);
     }
-
+    @CachePut(cacheNames = "com.lloyvet.system.service.impl.DeptServiceImpl",key = "#result.id")
     @Override
     public Dept updateDept(Dept dept) {
         deptMapper.updateById(dept);
         return dept;
+    }
+
+    @CacheEvict(cacheNames = "com.lloyvet.system.service.impl.DeptServiceImpl",key = "#id")
+    @Override
+    public boolean removeById(Serializable id) {
+        return super.removeById(id);
     }
 }
