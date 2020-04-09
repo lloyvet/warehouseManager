@@ -57,7 +57,8 @@ public class LoginController{
             Map<String,Object> map = new HashMap<>();
             map.put("token",token);
             map.put("permissions",permissions);
-
+            map.put("userType",user.getType());
+            map.put("username",user.getName());
             return new ResultObj(200,"登录成功",map);
         }catch (AuthenticationException e){
             e.printStackTrace();

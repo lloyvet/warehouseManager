@@ -1,12 +1,10 @@
 package com.lloyvet.system.controller;
 
-import com.lloyvet.system.common.Constant;
-import com.lloyvet.system.common.DataGridView;
-import com.lloyvet.system.common.MD5Utils;
-import com.lloyvet.system.common.ResultObj;
+import com.lloyvet.system.common.*;
 import com.lloyvet.system.domain.User;
 import com.lloyvet.system.service.UserService;
 import com.lloyvet.system.vo.UserVo;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -105,5 +103,13 @@ public class UserController {
             e.printStackTrace();
             return ResultObj.DISPATCH_ERROR;
         }
+    }
+    /**
+     * 查询当前登录的用户
+     */
+    @GetMapping("getCurrentUser")
+    public DataGridView getCurrentUser(){
+        ActiveUser activeUser = (ActiveUser) SecurityUtils.getSubject().getPrincipal();
+        return new DataGridView(activeUser.getUser());
     }
 }
