@@ -24,4 +24,10 @@
     id, `name`, loginname, address, sex, remark, pwd, deptid, hiredate, ordernum, `type`, 
     imgpath, salt, available
   </sql>
+    <select id="queryMenuMaxOrderNum" resultType="java.lang.Integer">
+      select max(ordernum) from sys_user
+    </select>
+  <insert id="saveUserRole">
+    insert  into sys_role_user(uid,rid) values(#{uid},#{rid})
+  </insert>
 </mapper>

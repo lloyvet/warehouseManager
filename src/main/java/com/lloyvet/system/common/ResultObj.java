@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class ResultObj {
     private Integer code = 200;
     private String msg = "";
-    private String token = "";
+    private Object token = "";
 
     public static final ResultObj IS_LOGIN =new ResultObj(200,"已登陆");
     public static final ResultObj UN_LOGIN =new ResultObj(-1,"未登陆");

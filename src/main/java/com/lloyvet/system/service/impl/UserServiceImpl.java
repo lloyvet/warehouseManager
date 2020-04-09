@@ -9,6 +9,7 @@ import com.lloyvet.system.common.Constant;
 import com.lloyvet.system.common.DataGridView;
 import com.lloyvet.system.domain.Dept;
 import com.lloyvet.system.mapper.DeptMapper;
+import com.lloyvet.system.mapper.RoleMapper;
 import com.lloyvet.system.service.DeptService;
 import com.lloyvet.system.vo.UserVo;
 import org.apache.ibatis.logging.Log;
@@ -20,6 +21,7 @@ import com.lloyvet.system.mapper.UserMapper;
 import com.lloyvet.system.domain.User;
 import com.lloyvet.system.service.UserService;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Service
@@ -28,7 +30,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private Log log = LogFactory.getLog(UserService.class);
     @Autowired
     private UserMapper userMapper;
-
+    @Autowired
+    private RoleMapper roleMapper;
     @Override
     public User queryUserByLoginName(String loginName) {
 
@@ -44,7 +47,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public User saveUser(User user) {
-        return null;
+        userMapper.insert(user);
+        return user;
     }
 
     @Override
@@ -70,6 +74,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public User updateUser(User user) {
-        return null;
+        userMapper.updateById(user);
+        return user;
+    }
+
+    @Override
+    public Integer queryMenuMaxOrderNum() {
+        return userMapper.queryMenuMaxOrderNum();
+    }
+
+    @Override
+    public void saveUserRole(Integer uid, Integer[] rids) {
+        //根据用户ID删除角色和用户中间表的数据
+        roleMapper.deleteRoleUserByUid(uid);
+        if(null!=rids&&rids.length>0){
+            for (Integer rid : rids) {
+                this.userMapper.saveUserRole(uid,rid);
+            }
+        }
+    }
+
+    @Override
+    public boolean removeById(Serializable id) {
+        //根据用户id删除角色和用户中间表的数据
+        roleMapper.deleteRoleUserByUid(id);
+        return super.removeById(id);
     }
 }

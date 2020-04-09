@@ -4,13 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lloyvet.system.common.Constant;
 import com.lloyvet.system.common.DataGridView;
 import com.lloyvet.system.vo.RoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lloyvet.system.mapper.RoleMapper;
 import com.lloyvet.system.domain.Role;
@@ -62,6 +67,53 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                 roleMapper.insertRoleMenu(rid,mid);
             }
         }
+    }
+
+    @Override
+    public List<String> queryRoleNamesByUserId(Integer id) {
+        //根据用户id查询角色id的集合
+        List<Integer> roleId = roleMapper.queryRoleIdsByUserId(id);
+        if(null!=roleId&&roleId.size()>0){
+            QueryWrapper<Role> qw = new QueryWrapper<>();
+            qw.eq("available", Constant.AVAILABLE_TRUE);
+            qw.in("id",roleId);
+            List<Role> rolesObject = roleMapper.selectList(qw);
+            List<String> roles = new ArrayList<>();
+            for (Role role : rolesObject) {
+                roles.add(role.getName());
+            }
+            return roles;
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public DataGridView queryAllAvailableRoleNoPage(RoleVo roleVo) {
+        QueryWrapper<Role> qw=new QueryWrapper<>();
+        qw.eq(roleVo.getAvailable()!=null,"available",roleVo.getAvailable());
+        List<Role> roles = this.roleMapper.selectList(qw);
+        //根据用户ID查询已拥有的角色ID
+        List<Integer> roleIds=this.roleMapper.queryRoleIdsByUserId(roleVo.getUserId());
+
+        List<Map<String,Object>> lists=new ArrayList<>();
+
+        for (Role role : roles) {
+            Boolean LAY_CHECKED=false;
+            for (Integer roleId : roleIds) {
+                if(role.getId().equals(roleId)){
+                    LAY_CHECKED=true;
+                    break;
+                }
+            }
+            Map<String,Object> map=new HashMap<>();
+            map.put("id",role.getId());
+            map.put("name",role.getName());
+            map.put("remark",role.getRemark());
+            map.put("LAY_CHECKED",LAY_CHECKED);
+            lists.add(map);
+        }
+        return new DataGridView(Long.valueOf(lists.size()),lists);
     }
 
     @Override

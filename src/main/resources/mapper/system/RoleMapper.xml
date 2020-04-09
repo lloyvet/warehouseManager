@@ -14,11 +14,17 @@
     <!--@mbg.generated-->
     id, `name`, remark, available, createtime
   </sql>
-    <delete id="deleteRoleMenuByRid">
-      delete from sys_role_menu where rid=#{value}
-    </delete>
+  <delete id="deleteRoleMenuByRid">
+    delete from sys_role_menu where rid=#{value}
+  </delete>
+  <delete id="deleteRoleMenuByMid">
+    delete from sys_role_menu where mid=#{value}
+  </delete>
   <delete id="deleteRoleUserByRid">
     delete from sys_role_user where rid=#{value}
+  </delete>
+  <delete id="deleteRoleUserByUid">
+    delete from sys_role_user where uid=#{value}
   </delete>
     <select id="queryMenuIdsByRid" resultType="java.lang.Integer">
       select mid from sys_role_menu where rid=#{value}
@@ -26,5 +32,15 @@
   <insert id="insertRoleMenu">
     insert into sys_role_menu(rid,mid) values(#{rid},#{mid})
   </insert>
-
+  <select id="queryRoleIdsByUserId" resultType="java.lang.Integer">
+    select rid from sys_role_user where uid=#{userId}
+  </select>
+  <select id="queryMenuIdsByRids" resultType="java.lang.Integer">
+    select distinct mid from sys_role_menu
+    <where>
+      <foreach collection="roleIds" open=" rid in (" close=")" separator="," item="sn">
+        #{sn}
+      </foreach>
+    </where>
+  </select>
 </mapper>

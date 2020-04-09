@@ -1,5 +1,6 @@
 package com.lloyvet.system.service;
 
+import com.lloyvet.system.common.DataGridView;
 import com.lloyvet.system.domain.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lloyvet.system.vo.RoleVo;
@@ -20,4 +21,8 @@ public interface RoleService extends IService<Role>{
     List<Integer> queryMenuIdsByRid(Integer id);
 
     void saveRoleMenu(Integer rid, Integer[] mids);
+
+    List<String> queryRoleNamesByUserId(Integer id);
+
+    DataGridView queryAllAvailableRoleNoPage(RoleVo roleVo);
 }

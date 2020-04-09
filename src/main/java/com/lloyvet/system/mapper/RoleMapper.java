@@ -15,4 +15,10 @@ public interface RoleMapper extends BaseMapper<Role> {
     List<Integer> queryMenuIdsByRid(Integer id);
 
     void insertRoleMenu(@Param("rid") Integer rid, @Param("mid") Integer mid);
+
+    void deleteRoleUserByUid(Serializable id);
+
+    List<Integer> queryRoleIdsByUserId(Integer userId);
+
+    List<Integer> queryMenuIdsByRids(@Param("roleIds") List<Integer> roleIds);
 }

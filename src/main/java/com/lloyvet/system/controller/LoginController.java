@@ -53,8 +53,12 @@ public class LoginController{
             loginfo.setLoginip(request.getRemoteAddr());
             loginfo.setLogintime(new Date());
             loginfoService.save(loginfo);
+            List<String> permissions = activeUser.getPermissions();
+            Map<String,Object> map = new HashMap<>();
+            map.put("token",token);
+            map.put("permissions",permissions);
 
-            return new ResultObj(200,"登录成功",token);
+            return new ResultObj(200,"登录成功",map);
         }catch (AuthenticationException e){
             e.printStackTrace();
             return ResultObj.UN_LOGIN;

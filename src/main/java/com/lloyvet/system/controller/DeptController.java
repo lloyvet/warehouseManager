@@ -6,6 +6,7 @@ import com.lloyvet.system.common.ResultObj;
 import com.lloyvet.system.domain.Dept;
 import com.lloyvet.system.service.DeptService;
 import com.lloyvet.system.vo.DeptVo;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ public class DeptController {
         return deptService.queryAllDept(deptVo);
     }
     @RequestMapping("updateDept")
+    @RequiresPermissions("dept:update")
     public ResultObj updateDept(Dept dept){
         try{
             deptService.updateDept(dept);
@@ -44,6 +46,7 @@ public class DeptController {
      * 添加部门
      */
     @PostMapping("addDept")
+    @RequiresPermissions("dept:add")
     public ResultObj addDept(Dept dept){
         try{
             dept.setSpread(Constant.SPREAD_FALSE);
@@ -66,6 +69,7 @@ public class DeptController {
      * 删除部门
      */
     @PostMapping("deleteDept")
+    @RequiresPermissions("dept:delete")
     public ResultObj deleteDept(Integer id){
         try{
             deptService.removeById(id);

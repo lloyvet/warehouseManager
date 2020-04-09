@@ -30,4 +30,6 @@ public interface MenuService extends IService<Menu>{
     Menu updateMenu(Menu menu);
 
     Integer queryMenuMaxOrderNum();
+
+    List<String> queryPermissionCodeByUserId(Integer id);
 }

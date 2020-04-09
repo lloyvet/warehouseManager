@@ -17,4 +17,8 @@ public interface UserService extends IService<User>{
     DataGridView queryAllUser(UserVo userVo);
 
     User updateUser(User user);
+
+    Integer queryMenuMaxOrderNum();
+
+    void saveUserRole(Integer uid, Integer[] rids);
 }

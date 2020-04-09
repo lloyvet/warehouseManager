@@ -9,4 +9,5 @@ public class RoleVo extends BaseVo{
     private String name;
     private String remark;
     private Integer available;
+    private Integer userId;
 }

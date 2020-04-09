@@ -77,6 +77,16 @@ public class RoleController {
         }
     }
     /**
+     * 查询所有可用角色
+     * @param roleVo
+     * @return
+     */
+    @RequestMapping("loadAllAvailableRoleNoPage")
+    public Object loadAllAvailableRoleNoPage(RoleVo roleVo){
+        roleVo.setAvailable(Constant.AVAILABLE_TRUE);
+        return this.roleService.queryAllAvailableRoleNoPage(roleVo);
+    }
+    /**
      * 根据角色id查询角色拥有的菜单和权限id
      */
     @GetMapping("queryMenuIdsByRid")
