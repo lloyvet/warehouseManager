@@ -1,5 +1,7 @@
 package com.lloyvet.business.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -73,8 +75,10 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     @CachePut(cacheNames = "com.lloyvet.business.service.impl.GoodsServiceImpl",key = "#result.id")
     @Override
     public Goods updateGoods(Goods goods) {
-        goodsMapper.updateById(goods);
-        return goods;
+        Goods selectById = this.goodsMapper.selectById(goods.getId());
+        BeanUtil.copyProperties(goods,selectById, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
+        this.goodsMapper.updateById(selectById);
+        return selectById;
     }
 
     @Override
@@ -87,8 +91,13 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     public List<Goods> getGoodsByProviderId(Integer id) {
+        if(null==id){
+            return null;
+        }
         QueryWrapper<Goods> qw = new QueryWrapper<>();
+        qw.eq("available",Constant.AVAILABLE_TRUE);
         qw.eq("providerid",id);
-        return goodsMapper.selectList(qw);
+        List<Goods> goods = goodsMapper.selectList(qw);
+        return goods;
     }
 }

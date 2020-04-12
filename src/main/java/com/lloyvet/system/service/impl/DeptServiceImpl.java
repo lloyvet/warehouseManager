@@ -1,5 +1,7 @@
 package com.lloyvet.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lloyvet.system.common.DataGridView;
 import com.lloyvet.system.vo.DeptVo;
@@ -33,8 +35,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @CachePut(cacheNames = "com.lloyvet.system.service.impl.DeptServiceImpl",key = "#result.id")
     @Override
     public Dept saveDept(Dept dept) {
-        deptMapper.insert(dept);
-        return dept;
+        Dept selectById = this.deptMapper.selectById(dept.getId());
+        BeanUtil.copyProperties(dept,selectById, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
+        this.deptMapper.updateById(selectById);
+        return selectById;
     }
 
     @Override

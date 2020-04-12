@@ -1,5 +1,7 @@
 package com.lloyvet.business.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -51,8 +53,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
 
     @Override
     public Customer updateCustomer(Customer customer) {
-        customerMapper.updateById(customer);
-        return customer;
+        Customer selectById = this.customerMapper.selectById(customer.getId());
+        BeanUtil.copyProperties(customer,selectById, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
+        this.customerMapper.updateById(selectById);
+        return selectById;
     }
 
     @Override

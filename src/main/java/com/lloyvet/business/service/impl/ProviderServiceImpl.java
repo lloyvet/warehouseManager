@@ -1,11 +1,14 @@
 package com.lloyvet.business.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lloyvet.business.vo.ProviderVo;
 import com.lloyvet.system.common.DataGridView;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -53,8 +56,10 @@ public class ProviderServiceImpl extends ServiceImpl<ProviderMapper, Provider> i
     @CachePut(cacheNames = "com.lloyvet.business.service.impl.ProviderServiceImpl",key = "#result.id")
     @Override
     public Provider updateProvider(Provider provider) {
-        providerMapper.updateById(provider);
-        return provider;
+        Provider selectById = providerMapper.selectById(provider.getId());
+        BeanUtil.copyProperties(provider,selectById, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
+        providerMapper.updateById(selectById);
+        return selectById;
     }
 
     @Override
