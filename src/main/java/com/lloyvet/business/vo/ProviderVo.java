@@ -6,8 +6,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode
-public class CustomerVo extends BaseVo {
-    private String customername;
+public class ProviderVo extends BaseVo {
+    private String providername;
     private String phone;
     private String connectionperson;
 }

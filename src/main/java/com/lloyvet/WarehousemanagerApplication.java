@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
-@MapperScan(basePackages={"com.lloyvet.system.mapper"})
+@MapperScan(basePackages={"com.lloyvet.system.mapper","com.lloyvet.business.mapper"})
 @EnableCaching
 public class WarehousemanagerApplication {
 
